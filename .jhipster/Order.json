@@ -1,0 +1,47 @@
+{
+  "changelogDate": "20220502171349",
+  "entityTableName": "jhi_order",
+  "fields": [
+    {
+      "fieldName": "user_id",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "product_id",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "total",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": 0
+    },
+    {
+      "fieldName": "quantity",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": 0
+    }
+  ],
+  "name": "Order",
+  "pagination": "infinite-scroll",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "person",
+      "relationshipName": "person",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": []
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "product",
+      "relationshipName": "product",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

@@ -1,0 +1,86 @@
+<div>
+  <h2 id="page-heading" data-cy="OrderHeading">
+    <span>Orders</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="reset()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-order"
+        [routerLink]="['/order/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Order </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="orders?.length === 0">
+    <span>No orders found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="orders && orders.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="reset()">
+          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="user_id"><span>User Id</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="product_id"><span>Product Id</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="total"><span>Total</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="quantity"><span>Quantity</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="person.id"><span>Person</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="product.id"><span>Product</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+        <tr *ngFor="let order of orders; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/order', order.id, 'view']">{{ order.id }}</a>
+          </td>
+          <td>{{ order.user_id }}</td>
+          <td>{{ order.product_id }}</td>
+          <td>{{ order.total }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>
+            <div *ngIf="order.person">
+              <a [routerLink]="['/person', order.person?.id, 'view']">{{ order.person?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="order.product">
+              <a [routerLink]="['/product', order.product?.id, 'view']">{{ order.product?.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/order', order.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/order', order.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(order)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
